@@ -1,3 +1,4 @@
+'use strict';
 /* app.js
  *
  * This is our RSS feed reader application. It uses the Google
@@ -37,7 +38,7 @@ function init() {
  * perform all of the DOM operations required to display
  * feed entries on the page. Feeds are referenced by their
  * index position within the allFeeds array.
- * This function all supports a callback as the second parameter
+ * This function call supports a callback as the second parameter
  * which will be called after everything has run successfully.
  */
  function loadFeed(id, cb) {
