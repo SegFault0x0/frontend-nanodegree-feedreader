@@ -21,10 +21,8 @@ $(function() {
          * page?
          */
         it('are defined', function() {
-            if (length > 0) {
-                expect(allFeeds).toBeDefined();
-                expect(allFeeds.length).not.toBe(0);
-            }
+            expect(allFeeds).toBeDefined();
+            expect(allFeeds.length).not.toBe(0);
         });
 
 
@@ -53,91 +51,71 @@ $(function() {
 
     // A test suite for the Hamburger Menu.
     describe('The Menu', function () {
-        var menuHidden;
-
-        beforeEach(function() {
-            // Determine whether the menu is hidden before each test
-            menuHidden = $('body').hasClass('menu-hidden');
-        });
-
         // Test to ensure that the menu element is hidden by default.
         it('is hidden by default', function() {
-            expect(menuHidden).toEqual(true);
+            expect($('body').hasClass('menu-hidden')).toEqual(true);
         });
 
         // Ensure that the menu changes visibility when the menu icon is clicked.
         it('changes visibility when the Hamburger Menu is clicked', function() {
-            if (menuHidden) {
-                // Perform a click of the Hamburger Menu icon
-                $('.menu-icon-link').click();
-                expect(menuHidden).toEqual(true);
-            }
-
-            if (!menuHidden) {
-                $('.menu-icon-link').click();
-                expect(menuHidden).toEqual(false);
-            }
-
-            // Re-hide the menu after the test
+            // Perform a click of the Hamburger Menu icon
             $('.menu-icon-link').click();
+            expect($('body').hasClass('menu-hidden')).toEqual(false);
+
+            $('.menu-icon-link').click();
+            expect($('body').hasClass('menu-hidden')).toEqual(true);
         });
     });
 
     // A test suite for the initial feed load
     describe('Initial Entries', function () {
         beforeEach(function(done) {
-            if (length > 0) {
-                // Perform the asynchronous loadFeed function
-                loadFeed(0, function() {
-                    // Let Jasmine know when the async function has completed.
-                    done();
-                });
-            }
+            /* Perform the asynchronous loadFeed function and let Jasmine
+             * know when the async function has completed.
+             */
+            loadFeed(0, done);
         });
 
         /* Ensure that when loadFeed() completes, there is at least a single
          * .entry element within the .feed container.
          */
         it('have at least one .entry element within the .feed container',
-                function(done) {
-            // If articles are loaded, they'll be present in the .feed array
-            expect($('.feed').find('article').length).not.toBe(0);
-            done();
+                function() {
+            // If article entries are loaded, they'll be children of `.feed`
+            expect($('.feed .entry')).not.toBe(0);
         });
-
     });
 
     // A test suite exercising the selection of a different feed
     describe('New Feed Selection', function () {
+        var origFeed = '';
+        var newFeed = '';
+
         beforeEach(function(done) {
             // Perform the initial feed load
-            if (length > 0) {
-                loadFeed(0, function() {
-                });
+            loadFeed(0, function() {
+                origFeed = $('.feed-list a[data-id=0]').text();
+            });
 
-                // Load the second feed in the `allFeeds` array
-                if (length >= 2) {
-                    loadFeed(1, function() {
-                        done();
-                    });
-                }
-            }
+            // Load the second feed in the `allFeeds` array
+            loadFeed(1, function() {
+                newFeed = $('.feed-list a[data-id=1]').text();
+                done();
+            });
         });
 
         // Test that the feed content changes when a new feed is loaded
         it('changes the contents of the feed', function(done) {
             // Compare the new title of the Header with the expected feed name.
-            if (length >= 2) {
-                expect($('.header-title').text()).toEqual(allFeeds[1].name);
-                done();
-            }
+            expect(origFeed).not.toEqual(newFeed);
+            done();
         });
 
-        afterEach(function(done) {
-            // Reset the page with the initial feed
-            loadFeed(0, function() {
-                done();
-            });
+        afterAll(function(done) {
+            /* Reset the page with the initial feed after the final test in
+             * order to maintain a consistent test environment.
+             */
+            loadFeed(0, done);
         });
      });
 }());
