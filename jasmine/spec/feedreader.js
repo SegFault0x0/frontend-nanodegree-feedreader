@@ -91,7 +91,7 @@ $(function() {
         var origFeed = '';
         var newFeed = '';
 
-        beforeEach(function(done) {
+        beforeAll(function(done) {
             // Perform the initial feed load
             loadFeed(0, function() {
                 origFeed = $('.feed-list a[data-id=0]').text();
@@ -106,7 +106,7 @@ $(function() {
 
         // Test that the feed content changes when a new feed is loaded
         it('changes the contents of the feed', function(done) {
-            // Compare the new title of the Header with the expected feed name.
+            // Compare the original feed Header with the new feed Header.
             expect(origFeed).not.toEqual(newFeed);
             done();
         });
