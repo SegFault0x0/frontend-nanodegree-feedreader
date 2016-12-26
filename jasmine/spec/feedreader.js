@@ -82,7 +82,7 @@ $(function() {
         it('have at least one .entry element within the .feed container',
                 function() {
             // If article entries are loaded, they'll be children of `.feed`
-            expect($('.feed .entry')).not.toBe(0);
+            expect($('.feed .entry').length).not.toBe(0);
         });
     });
 
@@ -94,13 +94,13 @@ $(function() {
         beforeAll(function(done) {
             // Perform the initial feed load
             loadFeed(0, function() {
-                origFeed = $('.feed-list a[data-id=0]').text();
-            });
+                origFeed = $('.feed').text();
 
-            // Load the second feed in the `allFeeds` array
-            loadFeed(1, function() {
-                newFeed = $('.feed-list a[data-id=1]').text();
-                done();
+                // Load the second feed in the `allFeeds` array
+                loadFeed(1, function() {
+                    newFeed = $('.feed').text();
+                    done();
+                });
             });
         });
 
@@ -109,13 +109,6 @@ $(function() {
             // Compare the original feed Header with the new feed Header.
             expect(origFeed).not.toEqual(newFeed);
             done();
-        });
-
-        afterAll(function(done) {
-            /* Reset the page with the initial feed after the final test in
-             * order to maintain a consistent test environment.
-             */
-            loadFeed(0, done);
         });
      });
 }());
